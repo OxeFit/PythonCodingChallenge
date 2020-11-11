@@ -10,4 +10,4 @@ def test_compute_fib_number():
     assert fib_number(6) == 8
 
     assert fib_number(13) == 233
-    assert fib_number(1000) == 987
+    assert fib_number(45) == 1134903170
