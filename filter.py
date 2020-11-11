@@ -24,11 +24,27 @@ class AlphaFilter:
     def __init__(self, alpha: float, sample_dt: float) -> None:
         self.alpha = alpha
         self.sample_dt = sample_dt
+        self.pos = None
+        self.vel = 0
 
     def __repr__(self):
         return "AlphaFilter[alpha: %s dt:%s]" % (self.alpha, self.sample_dt)
 
+    def do_filter(self, pos: float):
+        if self.pos is None:
+            self.pos = pos
+        pos_next = self.pos + self.sample_dt*self.vel
+        res = pos_next - pos
+        self.pos = pos_next + self.alpha*res
+        
+    def value(self):
+        return self.pos
+    
+    def reset(self):
+        self.pos = None
+        self.vel = 0
+    
     @classmethod
     def from_break_freq(cls, freq: float, sample_dt: float):
         alpha = alpha_from_break_frequency(freq, sample_dt)
-        return cls(alpha, sample_dt)
+        return cls(alpha, sample_dt) 
