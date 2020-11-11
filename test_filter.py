@@ -1,7 +1,7 @@
 from filter import *
 import random
-
-
+import math
+import numpy as np
 def test_filter_from_break_freq():
     filter = AlphaFilter.from_break_freq(0.0, 0.001)
     assert filter.alpha == 1.0
@@ -23,15 +23,18 @@ def test_filter_simple():
     """The filter should set itself to exactly the input the first time it is called"""
     assert filter.value() == initial_position
 
-    for i in range(10000):
-        if i % 2 == 0:
-            simulated_noise = random.random()
-
-        current_value = filter.value()
-        new_value = current_value + (math.pow(-1, i) * simulated_noise)
-        filter.do_filter(new_value)
-
-    assert math.abs(filter.value() - initial_position) < 0.0001
+#    for i in range(10000):
+#        if i % 2 == 0:
+#            simulated_noise = random.random()
+#
+#        current_value = filter.value()
+#        new_value = current_value + (math.pow(-1, i) * simulated_noise)
+#        filter.do_filter(new_value)
+    final_value = 10
+    ramp_signal = np.concatenate(np.linspace(0,final_value,num=5000),final_value*np.ones(5000))
+    for i in range(ramp_signal):
+        filter.do_filter(ramp_signal[i])
+    assert abs(filter.value() - final_value) < 0.0001
 
 
 def test_reset_filter():
